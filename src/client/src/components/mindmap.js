@@ -57,10 +57,10 @@ const MindMap = ({ data }) => {
         .append("line") // append is needed to add a new element to a dom
         .attr("class", "link") // link - is its own class - all links between nodes will have these attributes
         .merge(link)
-        .attr("x1", (d) => d.source.x + 25)
-        .attr("y1", (d) => d.source.y + 25)
-        .attr("x2", (d) => d.target.x + 25)
-        .attr("y2", (d) => d.target.y + 25)
+        .attr("x1", (d) => d.source.y + 25)
+        .attr("y1", (d) => d.source.x + 25)
+        .attr("x2", (d) => d.target.y + 25)
+        .attr("y2", (d) => d.target.x + 25)
         .attr("stroke", "black");
 
       link.exit().remove(); // removes contextually reduntant links during the render
@@ -81,7 +81,7 @@ const MindMap = ({ data }) => {
         .enter() // .enter is defined in d3
         .append("g") //
         .attr("class", "node") // shares the same node class
-        .attr("transform", (d) => `translate(${d.x + 25},${d.y + 25})`) // entering a node tranlates it in the xy plane (moves it)
+        .attr("transform", (d) => `translate(${d.y + 25},${d.x + 25})`) // entering a node tranlates it in the xy plane (moves it)
         .on("click", (event, d) => toggleNode(d)); // this occurs on click (java flashbacks)
 
       nodeEnter
