@@ -1,112 +1,130 @@
-// Okay so I have to make sure i keep track for later so for oritenting in the code read as follows:
-// Numbering is used to sign post steps for what is happening - one part to remember
-// Entering new sections (signposted by ALL CAPS) will start the numbring again
-// IF YOU GET LOST - start from the numbers and follow the steps - closed backets end the section 
-// this might make numbering look weird at first but it works - trust me (yourself lol). 
-
-//IMPORTS 
-// 1) Import react with hooks:
-// 2) useEffect - lets me run extra code even after the component is rendered
-// 3) userRef - allows me to refernece Dom elements - in my case the svg element that contains my map 
-// 4) Import d3:
-// 5) import * as d3 from "d3" - the visualisation library for the mindmap - allows me to make a tree 
-
-
+//IMPORTS
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-// MINDMAP DEFINITION
-// 1) React component MindMap - must contain hierachial "data" as a prop to work
-// 2) svgRef - references the svg where d3 can render the map
-const MindMap = ({ data }) => { //1
+//MINDMAP DEFINITION
+const MindMap = ({ data }) => {
+  console.log("Data for the map exists as: ", data); // test to see if the data is passed to the mindmap component
+  //1
   const svgRef = useRef(); //2
-
-  // USEEFFECT
-  // 1) useEffect - runs after the component is rendered
-
+  //USEEFFECT
   useEffect(() => {
-    // return if thers no data 
-    if (!data) return; //
+    console.log("useEffect triggered");
+    if (!data) return; // return if there's no data
 
-    // TREE SETUP
-    // 1) Define the root using d3 hierachy   populate with prop data
-    // 2) Define the tree using d3 tree - set the tree size
-    // 3) Populate the tree with the data (prop) using the tree object
+    //TREE SETUP
+    const root = d3.hierarchy(data); //1 - Convert JSON into D3 hierarchy https://d3js.org/d3-hierarchy/hierarchy
+    console.log("Root is: ", root); // test to see if the root is created
 
-    const root = d3.hierarchy(data); //1 // json into d3 format https://d3js.org/d3-hierarchy/hierarchy
-    const tree = d3.tree().size([dimensions.width -100 , dimensions.height -100]); //2 dimensions of the tree
-    tree(root); //3 a tree with the route data
-    
-     // SVG SETUP
-     //1) sets dimensions for the svg element
-     // 2) sets the pointer to the svg element in the DOM using svgRef and d3.select
-     // 3) sets the width and height of the svg element
-     // 4) sets the background color of the svg element
+    const tree = d3.tree().size([800 - 100, 800 - 100]); //2 - Tree layout size
+    tree(root); //3 - Apply tree layout to root
+    console.log("Tree layout is: ", root.descendants()); // is the tree applied to the root?
 
-    const dimensions = { width:800, height:800 }; //1
-    const svg = d3.select(svgRef.current) //2
-        .attr("width", dimensions.width) //3
-        .attr("height", dimensions.height) //3
-        .style("background-color", "1px solid black"); //4
+    //COLLAPSING THE TREE
+    const collapseNodes = (node) => {
+      if (node.children) {
+        
+        console.log("Collapsing node with QAID:", node.data.QAID);
+        node._children = node.children; //2 - Store hidden children
+        node.children = null; // Collapse node
+        node._children.forEach(collapseNodes); // Collapse recursively
+      }
+    };
 
-    // ROUTES - lines - BETWEEN NODES
-    // 1) Define the lines between the nodes
-    // 2) Create positional data for the lines
-    // 3) Set the stroke color of the lines
-    
-    svg.selectAll("line") //1
-        .data(root.links()) //1
-        .enter().append("line") //1
-        .attr("x1", d => d.source.x + 50) //2
-        .attr("y1", d => d.source.y + 50) //2
-        .attr("x2", d => d.target.x + 50)  //2
-        .attry("y2", d = d.target.y + 50)  //2
-        .attr("stroke", "black"); //3
+    root.children.forEach(collapseNodes); // Collapse all children initially
 
-    // NODES - CIRCLES - FOR EACH NODE (this is the chidlren of the root)
-    // 1) Define the nodes
-    // 2) Create positional data for the nodes
-    // 3) Set the fill color of the nodes
-    // 4) Set the stroke color of the nodes
-    // 5) Set the stroke width of the nodes
-    // 6) Set the radius of the nodes
+    //SVG SETUP
+    const svg = d3
+      .select(svgRef.current) //2 - Select SVG
+      .attr("width", 800) //3 - Width
+      .attr("height", 800) //3 - Height
+      .style("border", "1px solid black"); //3 - Border
 
-    svg.selectAll("circle") //1
-        .data(root.descendants()) //1
-        .enter().append("circle") //1
-        .attr("cx", d => d.x + 50) //2
-        .attr("cy", d => d.y + 50) //2
-        .attr("fill", "white") //3
-        .attr("stroke", "black") //4
-        .attr("stroke-width", 2) //5
-        .attr("r", 20); //6
+    svg.selectAll("*").remove(); // Clear previous tree
 
-    // TEXT - LABELS - FOR EACH NODE
-    // 1) Define labels
-    // 2) Create positional data for labels
-    // 3) Set the text for the labels
-    // 4) Set the text anchor of the labels
-    // 5) Allign the labels to the middle 
-    // 6) Ajust the the font size and colour of the labels
+    // FUNCTION TO UPDATE TREE WHEN EXPANDING/COLLAPSING
+    const updateExpandCollapse = (source) => {
+      console.log("Updating tree layout... Source:", source);
+      tree(root); // Recalculate positions of the nodes at the start of each render
 
-    
-    svg.selectAll("text") //1
-    .data(root.descendants())//1
-    .enter().append("text") //1
+      // ROUTES - LINES - BETWEEN NODES
+      const link = svg // this defines links
+        .selectAll(".link")
+        .data(root.links(), (d) => d.target.data.QAID);
 
-    .attr("x", d => d.x + 60) //2
-    .attr("y", d => d.y + 50) //2
+      link // while this decides where the links go
+        .enter()
+        .append("line") // append is needed to add a new element to a dom
+        .attr("class", "link") // link - is its own class - all links between nodes will have these attributes
+        .merge(link)
+        .attr("x1", (d) => d.source.x + 25)
+        .attr("y1", (d) => d.source.y + 25)
+        .attr("x2", (d) => d.target.x + 25)
+        .attr("y2", (d) => d.target.y + 25)
+        .attr("stroke", "black");
 
-    .text(d => d.data.name) //3
+      link.exit().remove(); // removes contextually reduntant links during the render
 
-    .attr("text-anchor", "middle") //4
-    .attr("alignment-baseline", "middle") //5
-    .attr("font-size", "12px") //6
-    .attr("fill", "black"); //6
-    
-  }, [data]); //1 - renders when the prop (data) changes
+      // NODES - CIRCLES - FOR EACH NODE (this is the children of the root)
+      // 1) Define the nodes
+      // 2) Create positional data for the nodes
+      // 3) Set the fill color of the nodes
+      // 4) Set the stroke color of the nodes
+      // 5) Set the stroke width of the nodes
+      // 6) Set the radius of the nodes
 
-  return <svg ref={svgRef}></svg>;
+      const node = svg // nodes are svg elements
+        .selectAll(".node") // selects all elements with the class node
+        .data(root.descendants(), (d) => d.data.QAID); //QAID aka Question Answer ID... (note that deceandants is defined in d3 it just refers to children of the node)
+
+      const nodeEnter = node
+        .enter() // .enter is defined in d3
+        .append("g") //
+        .attr("class", "node") // shares the same node class
+        .attr("transform", (d) => `translate(${d.x + 25},${d.y + 25})`) // entering a node tranlates it in the xy plane (moves it)
+        .on("click", (event, d) => toggleNode(d)); // this occurs on click (java flashbacks)
+
+      nodeEnter
+        .append("circle")
+        .attr("r", 10)
+        .attr("fill", (d) =>
+          d.children || d._children ? "blue" : "green"
+        )
+        .attr("stroke", "black") 
+        .attr("stroke-width", 2);
+
+      // TEXT - LABELS - FOR EACH NODE
+      nodeEnter
+        .append("text")
+        .attr("x", 15)
+        .attr("dy", ".35em")
+        .text((d) => d.data.Question) //3 - Question label
+        .attr("font-size", "12px")
+        .attr("fill", "black");
+
+      node.exit().remove(); // this
+      console.log("updateExpandCollapse complete");
+    };
+    //FUNCTION TO TOGGLE NODE (EXPAND/COLLAPSE)
+    const toggleNode = (d) => {
+      console.log("Toggling node with QAID:", d.data.QAID);
+      if (d.children) {
+        d._children = d.children; // Store hidden children
+        d.children = null; // Collapse node
+      } else {
+        d.children = d._children; // Expand node
+        d._children = null;
+      }
+      updateExpandCollapse(d); // Re-render tree
+      console.log("Toggle node: ", d); 
+    };
+
+    updateExpandCollapse(root); // This is the first render of the map
+    console.log("Initial render: done"); // initial render done
+  }, [data]); //1 - Runs whenever `data` changes
+
+  console.log("Rendering MindMap component"); // log component render
+  return <svg ref={svgRef}></svg>; // SVG element for D3 rendering
 };
 
 export default MindMap;
