@@ -194,12 +194,16 @@ const MindMap = ({ data }) => {
     // Otherwise, the node's children are hidden.
 
     const toggleNode = (d) => {
-      console.log("Toggling node with QAID:", d.data.QAID);
-      d.children = d.children ? null : d._children;
-      d._children = d.children ? null : d._children; // this reads as 
-      updateExpandCollapse(d); // Re-render tree
+      console.log("Toggling node with QAID:", d.data.QAID); 
+      //The following runs on a click - 
+      if (d.children) { // If node has d.children (true)
+        d._children = d.children; // d._children stores nodes d.children nodes
+        d.children = null; // original node's child nodes  (d.children) become null (effectively gets "hidden")
+      } else if (d._children) { // If node has d._children (hidden children) (true)
+        d.children = d._children; // node's own children (d.children) become the stored hidden children (d._children)
+      }
+      updateExpandCollapse(d); // pulls it all together with render - transitions and positonal updates
     };
-
     root.x0 = root.x; // this it stores the postion of the root node about its xy coords
     root.y0 = root.y;
     updateExpandCollapse(root); //render 
