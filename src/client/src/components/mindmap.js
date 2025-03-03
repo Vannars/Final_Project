@@ -105,7 +105,7 @@ const MindMap = ({ data }) => {
         (svgHeight - (xExtent[1] - xExtent[0])) / 2 - xExtent[0]; //adjust - i might need to adjust this to get the tree to center in the svg
 
       g.transition()
-        .duration(200)
+        .duration(2)
         .attr("transform", `translate(${translateX}, ${translateY})`); // This kinda works like animation 
 
       //===============================================================ROUTES (LINKS) BETWEEN NODES===============================================================
@@ -120,7 +120,7 @@ const MindMap = ({ data }) => {
         .attr("class", "link")
         .merge(link)
         .transition()
-        .duration(250)
+        .duration(50)
         .attr(
           "d",
           // Here, y is in the x position and x is in the y position - because the tree is rotated 90 degrees and d3 tree is vertical by default
@@ -175,7 +175,7 @@ const MindMap = ({ data }) => {
       node
         .merge(nodeEnter)  // merge method - ref link - https://observablehq.com/@d3/selection-merge
         .transition()
-        .duration(100)
+        .duration(50)
         .attr("transform", (d) => `translate(${d.y},${d.x})`);
       node.exit().remove(); // Remove obsolete nodes
 

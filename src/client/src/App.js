@@ -10,10 +10,12 @@ const data = {
   "children": [
     {
       "Question": "Child Question 1",
+      "Answer": "Child Answer 1",
       "QAID": "child-id-1",
       "children": [
         {
           "Question": "Grandchild Question 1.1",
+        
           "QAID": "grandchild-id-1-1",
           "children": [
             {
