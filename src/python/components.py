@@ -32,10 +32,10 @@ for token in doc:
     print(token.text, token.pos_, token.dep_)
 # output: question: Who created the RuPERTa-base?
 #Original version =====================================}
-
+#GET SETENCES FUNCTION
 def get_sentences(text): 
     doc = nlp(text) #ref link: https://spacy.io/api/doc
-    sentences = list(doc.sent) # sent comes from the sentencizer class https://spacy.io/api/sentencizer (iterates from the default boundary which is a period ".")
+    sentences = list(doc.sents) # sent comes from the sentencizer class https://spacy.io/api/sentencizer (iterates from the default boundary which is a period ".")
     return [s.text for s in sentences] # returning sentences for all elements that have a .text attribute (hopefully all of them) 
 #Test
 if __name__ == "__main__": # ref link: https://www.geeksforgeeks.org/what-does-the-if-__name__-__main__-do/)
@@ -44,6 +44,19 @@ if __name__ == "__main__": # ref link: https://www.geeksforgeeks.org/what-does-t
     print(sentence)
     #output: ['The PlayStation 5 (PS5) is Sony's latest gaming console.', 'It features a custom SSD for fast loading.'] Successfull
 
+#GEN QUESIONS FUNCTION (EXTENTION OF GET QUESTION FUNCTION)
+def gen_questions(text):
+    questions = []
+    sentences = get_sentences(text)
+    for s in sentences:
+        questions.append(get_question(s, text))
+        return questions
+#Test
+if __name__ == "__main__":
+    context = "The PlayStation 5 (PS5) is Sony's latest gaming console. It features a custom SSD for fast loading."
+    questions = gen_questions(context)
+    for q in questions:
+        print(q)
 # CITATION
 
 #THIS IS THE CITATION FOR THE T5 MODEL USED IN THE QUESTION GENERATION COMPONENT
