@@ -11,7 +11,7 @@ import * as d3 from "d3";
 
 const MindMap = ({ data }) => {
   console.log("Data for the map exists as: ", data); // Check if data is received
-  const svgRef = useRef(); // Reference to the SVG element
+  const svgRef = useRef(); 
 
   //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<USE EFFECT HOOK OPEN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   useEffect(() => {
@@ -51,7 +51,7 @@ const MindMap = ({ data }) => {
     // The 'g' group element holds the tree nodes and links.
 
     const svg = d3
-      .select(svgRef.current)
+      .select(svgRef.current) 
       .attr("width", 1000) // Initial width
       .attr("height", 1000) // Initial height
       .style("border", "1px solid black");
@@ -171,6 +171,11 @@ const MindMap = ({ data }) => {
         .text((d) => d.data.Question)
         .attr("font-size", "14px")
         .attr("fill", "black");
+
+      nodeEnter
+      .append("text")
+      .attr("x", 15)
+      .attr("dy", "1.35em")
 
       node
         .merge(nodeEnter)  // merge method - ref link - https://observablehq.com/@d3/selection-merge
