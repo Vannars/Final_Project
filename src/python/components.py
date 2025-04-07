@@ -1,5 +1,6 @@
 from transformers import AutoModelWithLMHead, AutoTokenizer
 import spacy
+import json
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm") # loads the tokenizer for english
@@ -32,6 +33,9 @@ for token in doc:
     print(token.text, token.pos_, token.dep_)
 # output: question: Who created the RuPERTa-base?
 #Original version =====================================}
+
+
+
 #GET SETENCES FUNCTION
 def get_sentences(text): 
     doc = nlp(text) #ref link: https://spacy.io/api/doc
@@ -40,8 +44,9 @@ def get_sentences(text):
 #Test
 if __name__ == "__main__": # ref link: https://www.geeksforgeeks.org/what-does-the-if-__name__-__main__-do/)
     text = "The PlayStation 5 (PS5) is Sony's latest gaming console. It features a custom SSD for fast loading."
-    sentence = get_sentences(text)
-    print(sentence)
+    sentences = get_sentences(text)
+    for s in sentences:
+        print(s)
     #output: ['The PlayStation 5 (PS5) is Sony's latest gaming console.', 'It features a custom SSD for fast loading.'] Successfull
 
 #GEN QUESIONS FUNCTION (EXTENTION OF GET QUESTION FUNCTION)
@@ -49,14 +54,19 @@ def gen_questions(text):
     questions = []
     sentences = get_sentences(text)
     for s in sentences:
-        questions.append(get_question(s, text))
-        return questions
+        question = (get_question(s, text))
+        questions.append(question)
+    return questions
 #Test
 if __name__ == "__main__":
-    context = "The PlayStation 5 (PS5) is Sony's latest gaming console. It features a custom SSD for fast loading."
-    questions = gen_questions(context)
-    for q in questions:
-        print(q)
+    test_context = "The PlayStation 5 (PS5) is Sony's latest gaming console. It features a custom SSD for fast loading."
+    questions = gen_questions(test_context)
+    for s, q in zip(get_sentences(test_context), questions): # looping over setences (s) and questions (q) in zip (saving memory)
+        print(f"Test Sentence (Answer): {s}")
+        print(f"Generated response (Question): {q}\n")
+
+    result= {"context": test_context, "qa_pairs": questions}
+    print(json.dumps(result, indent=4))
 # CITATION
 
 #THIS IS THE CITATION FOR THE T5 MODEL USED IN THE QUESTION GENERATION COMPONENT
