@@ -1,6 +1,7 @@
 from transformers import AutoModelWithLMHead, AutoTokenizer
 import spacy
-import json
+import json # json dumps - formatting for the output
+import uuid # unique ids 
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm") # loads the tokenizer for english
@@ -25,6 +26,7 @@ answer = "Manuel"
 
 # Original version ===================================={
 question = get_question(answer, context)
+print("")
 print("Generated question:", question)
 
 # Process the context with spaCy
@@ -57,20 +59,44 @@ def gen_questions(text):
         question = (get_question(s, text))
         questions.append(question)
     return questions
+
+def gen_questions_hierarchial(text):
+    sentences = get_sentences(text)
+    children = []
+    for s in sentences:
+        question = get_question(s, text)
+        children.append({
+            "Question": question,
+            "Answer": s,
+            "QAID": str(uuid.uuid4()),
+            "children": []
+        })
+    return children
+
 #Test
 if __name__ == "__main__":
-    test_context = "The PlayStation 5 (PS5) is Sony's latest gaming console. It features a custom SSD for fast loading."
-    questions = gen_questions(test_context)
-    for s, q in zip(get_sentences(test_context), questions): # looping over setences (s) and questions (q) in zip (saving memory)
-        print(f"Test Sentence (Answer): {s}")
-        print(f"Generated response (Question): {q}\n")
+    test_context = "The human heart can pump enough pressure to squirt blood 30 feet, and there are more than 1,700 references to gems and precious stones in the King James translation of the Bible. Diet Coke was only invented in 1982, and if you had enough water to fill one million goldfish bowls, you could fill an entire stadium. The average person makes about 1,140 telephone calls each year, and the Australian $5 to $100 notes are made of plastic. "
+   
+   # OLD VERSION (not heierarchical)
+   # questions = gen_questions(test_context)
+    #for s, q in zip(get_sentences(test_context), questions): # looping over setences (s) and questions (q) in zip (saving memory)
+     #   print(f"Test Sentence (Answer): {s}")
+      #  print(f"Generated response (Question): {q}\n")
+    #result= {"context": test_context, "qa_pairs": questions}
+        #End OLD VERSION
 
-    result= {"context": test_context, "qa_pairs": questions}
+      # NEW VERSION (heierarchical)
+    children = gen_questions_hierarchial(test_context)
+    result = {
+        "Question": "Root",
+        "QAID": "Root",
+        "children": children,
+    }    
     print(json.dumps(result, indent=4))
 # CITATION
 
 #THIS IS THE CITATION FOR THE T5 MODEL USED IN THE QUESTION GENERATION COMPONENT
-# THIS CODE HAS BEEN HEAVIL MODIFIED IN ORDER TO FIT THE NEEDS OF THE PROJECT
+# THIS CODE HAS BEEN HEAVILY MODIFIED IN ORDER TO FIT THE NEEDS OF THE PROJECT
 # THE ORIGINAL CODE CAN BE FOUND AT: https://huggingface.co/mrm8488/t5-base-finetuned-question-generation-ap
 # THE ORIGINAL CODE WAS WRITTEN BY MANUEL ROMERO
 # THE ORIGINAL CODE IS LICENSED UNDER THE APACHE 2.0 LICENSE
