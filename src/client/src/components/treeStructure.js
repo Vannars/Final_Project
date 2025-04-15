@@ -13,15 +13,22 @@ export const collapseNodes = (node) => {
   }
 };
 
-export const updateExpandCollapse = (root, tree, svg, g, source, toggleNode) => {
+export const updateExpandCollapse = (
+  root,
+  tree,
+  svg,
+  g,
+  source,
+  toggleNode
+) => {
   // source = clicked node or initial root when render starts
-  console.log("Updating tree layout... Source:", source);  
+  console.log("Updating tree layout... Source:", source);
   tree(root); // Recalculate node positions
- 
+
   const nodes = root.descendants(); // decendents are nodes (children and descendants)
   const links = root.links(); // links are the links between them between nodes
- 
-  //Dynamic Scaling 
+
+  //Dynamic Scaling
   // SVG is resized based on the tree’s dimensions.
   // Calculatinng the min/max x and y values of all nodes and adjusts the SVG size relative to the window, centering the tree.
   const xExtent = d3.extent(nodes, (d) => d.x); // min and max x coordinates
@@ -40,7 +47,8 @@ export const updateExpandCollapse = (root, tree, svg, g, source, toggleNode) => 
 
   //ROUTES (LINKS) BETWEEN NODES=
   const link = g.selectAll(".link").data(links, (d) => d.target.data.QAID);
-  link.enter()
+  link
+    .enter()
     .append("path")
     .attr("class", "link")
     .merge(link)
@@ -80,7 +88,28 @@ export const updateExpandCollapse = (root, tree, svg, g, source, toggleNode) => 
     .attr("stroke", "black")
     .attr("stroke-width", 2);
 
-  //TEXT LABELS
+  nodeEnter
+    .append("foreignObject")
+    .attr("y", 30)
+    .attr("x", -50)
+    .attr("width", 20)
+    .attr("height", 20)
+    .append("xhtml:button")
+    .attr("class", "toggle-button")
+    //styles of the button
+    .style("width", "20px")
+    .style("height", "20px")
+    .style("border", "1px solid black")
+    .style("background", (d) => (d.children || d._children ? "grey" : "grey"))
+    .style("color", "black")
+    .style("cursor", "pointer")
+    .text((d) => (d.children || d._children ? "-" : "+"))
+    .on("click", (event, d) => {
+      event.stopPropagation(); 
+      toggleNode(d); 
+    });
+
+  //TEXT LABELS===============================================================
   nodeEnter
     .append("text")
     .attr("x", 15)
@@ -89,10 +118,7 @@ export const updateExpandCollapse = (root, tree, svg, g, source, toggleNode) => 
     .attr("font-size", "14px")
     .attr("fill", "black");
 
-  nodeEnter
-    .append("text")
-    .attr("x", 15)
-    .attr("dy", "1.35em");
+  nodeEnter.append("text").attr("x", 15).attr("dy", "1.35em");
 
   node
     .merge(nodeEnter)
