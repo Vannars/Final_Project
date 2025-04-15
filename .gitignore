@@ -1,30 +1,30 @@
-#=================== PYTHON ===================
+#Python
 __pycache__/
 *.pyc
 
-#=================== NODE  ===================
+#Node
 node_modules/
 build/
 dist/
 
-#=================== D3 CACHE ===================
+#D3 CACHE
 *.svg
 
-#=================== ENVIRONMENT ===================
+#Envirommemt
 .env
-
-#=================== MODEL CACHE ===================
+venv/
+src/python/venv/
 src/server/cache/
 *.incomplete
 
-#=================== SYSTEM ===================
+#SYSTEM
 .DS_Store
 Thumbs.db
 
-#=================== LOGS ===================
+#LOGS
 *.log
 
-#=================== IDE ===================
+#IDE
 .vscode/
 .idea/
 *.sublime-project
