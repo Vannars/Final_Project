@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MindMap from './components/mindmap';
+import MindMap from './components/mainMap';
 
 const App = () => {
   const [data, setData] = useState(null);

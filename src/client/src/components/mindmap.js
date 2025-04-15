@@ -1,11 +1,11 @@
-//===============================================================IMPORTS===============================================================
+//IMPORTS
 // Importing react with useEffect and useRef hooks -
 // D3 - is used in this module to handles data vis and the main tree structure
 
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-//===============================================================MINDMAP DEFINITION===============================================================
+//MINDMAP DEFINITION
 // MindMap component - takes 'data' as a prop; this has to be a hierarchical JSON structure.
 // The component itself renders an SVG - a D3 tree
 
@@ -18,7 +18,7 @@ const MindMap = ({ data }) => {
     console.log("useEffect triggered");
     if (!data) return; // Prevents running if no data is provided
 
-    //===============================================================TREE SETUP===============================================================
+    //TREE SETUP
     // Here I convert JSON data into a D3 hierarchy (tsree).
     // The 'root' object refers to the top node of the tree - can be used throughout the component.
     // I am also specifying the node size for spacing between nodes
@@ -29,7 +29,7 @@ const MindMap = ({ data }) => {
     tree(root); // this indicates a tree with nodes of size 100px by 200px, with root (the origin node) containing the d3 hierarchy data (aka json that has been converted to a tree in d3)
     console.log("Tree layout is: ", root.descendants()); // Check tree structure - does it have children ?
 
-    //===============================================================COLLAPSING THE TREE INITIALLY===============================================================
+    //COLLAPSING THE TREE INITIALLY
     // Default state is all nodes collapsed - only the root and its children are visible.
     // The collapseNodes function stores children in '_children' to be used in - toggleNode - later
 
@@ -44,7 +44,7 @@ const MindMap = ({ data }) => {
 
     root.children?.forEach(collapseNodes); // Collapse all children initially
 
-    //===============================================================SVG SETUP===============================================================
+    //SVG SETUP
     // Here I define the SVG canvas.
     // The SVG starts with a fixed vaalue that can bee dynamicaled scaled (see Dynamic Scaling section).
     // The 'g' group element holds the tree nodes and links.
@@ -57,7 +57,7 @@ const MindMap = ({ data }) => {
     svg.selectAll("*").remove(); // Clear previous renders
     const g = svg.append("g"); // Create group container for the tree
 
-    //===============================================================TREE UPDATE FUNCTION===============================================================
+    //TREE UPDATE FUNCTION
     // This function updates the tree whenever nodes are expanded or collapsed.
     // It recalculates positions, redraws links, and repositions nodes.
     // (See Toggle Node section for when this function is triggered.)
@@ -72,7 +72,7 @@ const MindMap = ({ data }) => {
       const nodes = root.descendants(); // Const to nodes (childred and descendants)
       const links = root.links(); // Const to get nodes (links)
 
-      //===============================================================DYNAMIC SIZING===============================================================
+      //DYNAMIC SIZING
       //  SVG is resizes based on the tree’s dimensions.
       // It calculates the min/max x and y values of all nodes and adjusts the SVG size relative to the window centering the tree
       // d - defined in d.y is the x coordinate of the node
@@ -107,7 +107,7 @@ const MindMap = ({ data }) => {
         .duration(2)
         .attr("transform", `translate(${translateX}, ${translateY})`); // This kinda works like animation 
 
-      //===============================================================ROUTES (LINKS) BETWEEN NODES===============================================================
+      //ROUTES (LINKS) BETWEEN NODES
       // This section creates and updates the lines connecting the nodes.
       // The links are drawn dynamically and repositioned whenever the tree updates.
 
@@ -135,7 +135,7 @@ const MindMap = ({ data }) => {
 
       link.exit().remove(); // Remove outdated links
 
-      //===============================================================NODES (CIRCLES - change to rect )===============================================================
+      //NODES (CIRCLES - change to rect )
       // Each node is represented as a circle.
       // If a node has children, its blue othewise its green.
       // Clicking on a node toggles its expansion/collapse (see Toggle Node section).
@@ -159,7 +159,7 @@ const MindMap = ({ data }) => {
         .attr("stroke", "black")
         .attr("stroke-width", 2);
 
-      //===============================================================TEXT LABELS===============================================================
+      //TEXT LABELS
       // Each node is labeled with its question
       // Arbitrary text positioning.
 
@@ -192,7 +192,7 @@ const MindMap = ({ data }) => {
       console.log("updateExpandCollapse complete");
     };
 
-    //===============================================================TOGGLE NODE (EXPAND/COLLAPSE)===============================================================
+    //TOGGLE NODE (EXPAND/COLLAPSE)
     // This function expands or collapses a node when it is clicked.
     // If a node has hidden children in '_children', they are restored.
     // Otherwise, the node's children are hidden.
@@ -206,7 +206,7 @@ const MindMap = ({ data }) => {
       } else if (d._children) { // If node has d._children (hidden children) (true)
         d.children = d._children; // node's own children (d.children) become the stored hidden children (d._children)
       }
-      updateExpandCollapse(d); // pulls it all together with render - transitions and positonal updates
+      updateExpandCollapse(root, tree, svg, root, g, toggleNode); // pulls it all together with render - transitions and positonal updates
     };
     root.x0 = root.x; // this it stores the postion of the root node about its xy coords
     root.y0 = root.y;

@@ -36,10 +36,10 @@ function executeMindmapProcess(inputText) {
     // Process end - closing the process
     pyProc.on("close", (code) => { // when finished - the process ends
       if (code !== 0) {
-        reject(`Python script exited with code ${code}: ${error}`); // if it fails it returns and error
+        reject(`Python script exited with code ${code}: ${err}`); // if it fails it returns and error
       } else { // if it succeeds it returns the result
         try {
-          const parsed = JSON.parse(result); // hopefully
+          const parsed = JSON.parse(res); // hopefully
           resolve(parsed); // promise resolved (love it when I keep my promises)
         } catch (parseErr) {
           reject(
