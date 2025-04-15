@@ -1,33 +1,39 @@
-Local environment setup
+1) Local environment setup
 
-In the root folder: 
-1) Install node.js https://nodejs.org/
+- In the root folder: 
+  Install node.js https://nodejs.org/
 
-2) Check node versions in terminal:
+- Check node versions in terminal:
    node-v
    npm -v
 
-3) Install python 3 for the NLP https://www.python.org/downloads/
-
-In the server folder: 
-1) npm install express mysql mysql2 body-parser cors
-
-
-In the client folder
-1) npm install d3
+- Install python 3 for the NLP https://www.python.org/downloads/
+- In the server folder: 
+  npm install express mysql mysql2 body-parser cors
 
 
+- In the client folder:
+  npm install d3
 
-How to run server:
-In the terminal from the root type
-cd src
-cd server
-node server.js
 
-open a web browser and goto
+2) How to run server:
+- In the terminal from the root type  
+   cd src
+   cd server
+   node server.js
 
-http://localhost:7000/
+-  open a web browser and goto:
+   http://localhost:7000/
 
-Text should display the following message
+-  Text should display the following message:
+   Server is running on port()
 
-Server is running on port
+
+3) Running python component:
+-  In the terminal type:
+   .\venv\Scripts\activate
+
+   then type:
+   python components.py
+   
+- Output should show from the test cases in the terminal
