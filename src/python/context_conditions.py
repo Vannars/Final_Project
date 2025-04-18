@@ -22,6 +22,8 @@ def custom_boundaries(doc):
             doc[token.i + 1].is_sent_start = True
          if token.text == ".":  
             doc[token.i + 1].is_sent_start = True
+         if token.text.endswith(".") and not doc[token.i + 1].is_space:
+            doc[token.i + 1].is_sent_start = True
     return doc
 
 # adding to the pipeline is necessary - otherwise no custom bonundaries :(

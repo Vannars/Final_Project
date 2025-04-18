@@ -6,7 +6,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const context = "The answer to life the universe and everything is 42.";
+    const context = "The answer to life the universe and everything is 42. This quote comes from the Hitchhikers guide to the galaxy by Douglas Adams.";
   
     // Fetch the mindmap data from the backend
     fetch("http://localhost:3001/api/mindmap", {  // Updated port from 3002 to 3001
@@ -42,7 +42,38 @@ const App = () => {
       ) : (
         <p>Failed to load mind map.</p>  // Error message if data fetch fails
       )}
+       {/* Side Panel */}
+    <div
+      id="side-panel"
+      style={{
+        position: "fixed",
+        right: 0,
+        top: 0,
+        width: "300px",
+        height: "100%",
+        background: "#f9f9f9",
+        borderLeft: "1px solid #ccc",
+        display: "none",
+        padding: "20px",
+      }}
+    >
+      <button
+        id="close-panel"
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+        }}
+        onClick={() => {
+          document.getElementById("side-panel").style.display = "none";
+        }}
+      >
+        Close
+      </button>
+      <h3>Node Details</h3>
+      <div id="side-panel-content"></div>
     </div>
+  </div>
   );
 };
 

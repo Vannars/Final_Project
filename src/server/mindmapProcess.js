@@ -56,7 +56,7 @@ function executeMindmapProcess(inputText) {
 // It runs only if when run directly - not when imported by server.js
 // The text is dummy - googled who Leonardo da Vinci is - the output is successful if it returns a JSON object with the question/answer pairs and their respective IDs/children.
 if (require.main === module) {
-  const testInput = `Leonardo da Vinci was an Italian polymath of the Renaissance. He is considered one of the greatest painters of all time, and perhaps the most diversely talented person  to have ever lived.`;
+  const testInput = "The answer to life the universe and everything is 42. This is a quote comes from the Hitchhikers guide to the galaxy by Douglas Adams.";
 
   console.log("Running test for executeMindmapProcess...");
   executeMindmapProcess(testInput)

@@ -28,11 +28,12 @@ def get_question(answer, context, max_length=250): # I mean if sentence is longe
     output = model.generate(input_ids=features['input_ids'], attention_mask=features['attention_mask'], max_length=max_length)
     return tokenizer.decode(output[0])
 
-def get_sentences(text): #eats text, spits out sentences without whitespace under the conditions of the custon boundaries (see context_conditions.py)
+def get_sentences(text):
     if "custom_boundaries" not in nlp.pipe_names:
         nlp.add_pipe("custom_boundaries", before="parser")
     doc = nlp(text)
-    return [s.text.strip() for s in doc.sents]
+    sentences = [s.text.strip() for s in doc.sents]
+    return sentences
 
 def gen_questions_hierarchial(text): # also a bit text hungry
     sentences = get_sentences(text) # uses get_sentences
@@ -67,7 +68,7 @@ def gen_questions_hierarchial(text): # also a bit text hungry
 
 def output_main(context_arg=None): #check input text in main for the sister condition 
     default_context = (
-        " The answer to life the universe and everything is 42."
+        "The answer to life the universe and everything is 42. This quote comes from the Hitchhikers guide to the galaxy by Douglas Adams."
     )
     context_to_use = context_arg if context_arg else default_context
     children = gen_questions_hierarchial(context_to_use)

@@ -15,6 +15,10 @@ const useMindMap = (svgRef, data) => {
     if (!data) return; // Prevents running if no data is provided
 
     //===============================================================TREE SETUP===============================================================
+    // Here I convert JSON data into a D3 hierarchy (tsree).
+    // The 'root' object refers to the top node of the tree - can be used throughout the component.
+    // I am also specifying the node size for spacing between nodes
+
     const root = d3.hierarchy(data); // Convert JSON into D3 hierarchy ref link - https://observablehq.com/@d3/tidy-tree
     console.log("Root is: ", root);
     const tree = d3.tree().nodeSize([100, 200]); // tree is an inbuilt function in d3 - my node size is 100px by 200pxs
@@ -24,8 +28,10 @@ const useMindMap = (svgRef, data) => {
     root.children?.forEach(collapseNodes); // Collapse all children initially
 
     //===============================================================SVG SETUP===============================================================
+    // Here I define the SVG canvas.
     // The SVG starts with a fixed value that can be dynamically scaled (see Dynamic Scaling section).
     // The 'g' group element holds the tree nodes and links.
+
     const svg = d3
       .select(svgRef.current)
       .attr("width", 1000) // Initial width
