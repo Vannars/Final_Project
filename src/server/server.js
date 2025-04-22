@@ -1,17 +1,34 @@
 //Imports
 require('dotenv').config(); // loading initial crenditials from .env - *kept a copy*
-const express = require('express');
-const cors = require('cors');   
-const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+const mysql = require('mysql2'); // enables connection to mysql database
+const express = require('express'); // for server creation/routes
+const session = require('express-session'); // session management
+const cors = require('cors'); //cross origin requests - between server/python and react frontend
+const bodyParser = require('body-parser'); // parsing json and text bodies
+const usersRoutes = require('./users'); // routes for user management (login, register, logout)
+//
 const app = express();
 const port = process.env.PORT || 3001;
 const { executeMindmapProcess} = require('./mindmapProcess');
 
 //Middleware
-app.use(cors()); // cross origin requests - because i made the back and front end run on different ports it just wrorks
+app.use(cors({
+  origin: 'http://localhost:3002', // front end orgin
+  credentials: true, // credentials to be sent with requests 
+})); // cross origin requests - because i made the back and front end run on different ports it just wrorks
+
 app.use(bodyParser.json()); // allow json to be sent through bodies (Post /api/mindmap - see also fetch in App.js)
 app.use(express.text()); // allows plaintext to be sent through request bodies (Post /api/mindmap - see also fetch in App.js)
+
+app.use(
+    session({
+      secret: 'secret',
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: false },
+    })
+  );
+  
 
 //Defining of the admin user credentials (check .env if I forget)
 const host = process.env.HOST;
@@ -43,8 +60,9 @@ app.get('/', (req, res) => { //Default route is / - going to localhost:7000/ wil
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
+app.use('/api/users', usersRoutes(connection)); // pointing to the routes from users.js - can pass connection objects to it - login, register and logout routes are defined here
 
-// Post route sents plaintext from the body to be processed by mindmapProcess.js - this calls components.py - retuning a JSON response to the react frontend
+// Post route sents plaintext from the body to be processed by mindmapProcess.js - this calls components.py - retuning a json response to the react frontend
 app.post("/api/mindmap", async (req, res) => {
     const plainText = req.body;
     try {
@@ -53,5 +71,6 @@ app.post("/api/mindmap", async (req, res) => {
     } catch (err) {
       res.status(500).json({ error: err.toString() }); //  fails if the python script does not run correctly - 500 *remember 500 is internal*
     }
+
 });
   
