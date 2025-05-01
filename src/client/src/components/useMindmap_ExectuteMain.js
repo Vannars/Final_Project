@@ -1,10 +1,12 @@
 import React, { useRef } from "react";
-import useMindMap from "./runMap"; 
+import useMindMap from "./useMindmap_Main"; 
 
 const MindMap = ({ data }) => {
   const svgRef = useRef();
   useMindMap(svgRef, data); 
-  return <svg ref={svgRef}></svg>;
+  return <div className="mindmap-scroll">
+    <svg ref={svgRef} className="mindmap-svg"></svg>
+    </div>;
 };
     
 export default MindMap;

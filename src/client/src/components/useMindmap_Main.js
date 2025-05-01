@@ -1,7 +1,7 @@
 // runMap.js
 import { useEffect } from "react";
 import * as d3 from "d3";
-import { collapseNodes, updateExpandCollapse } from "./treeStructure";
+import { collapseNodes, updateExpandCollapse } from "./useMindmap_TreeStructure";
 //===============================================================MINDMAP DEFINITION===============================================================
 // MindMap component - takes 'data' as a prop; this has to be a hierarchical JSON structure.
 // The component itself renders an SVG - a D3 tree
@@ -34,9 +34,9 @@ const useMindMap = (svgRef, data) => {
 
     const svg = d3
       .select(svgRef.current)
-      .attr("width", 1000) // Initial width
-      .attr("height", 1000) // Initial height
-      .style("border", "1px solid black");
+      .attr("width", 1000) 
+      .attr("height", 1000) 
+      .attr("class", "mindmap-svg")
     svg.selectAll("*").remove(); // Clear previous renders
     const g = svg.append("g"); // Create group container for the tree
 
