@@ -1,0 +1,48 @@
+main, .main-menu, .user-list, .login-form {
+    background: rgba(34, 34, 64, 0.85);
+    border-radius: 22px;
+    box-shadow: 0 8px 32px 0 rgba(30, 45, 59, 0.18);
+    padding: 32px 48px;
+    margin: 32px auto;
+    max-width: 420px;
+    width: 100%;
+  }
+
+  .login-form{
+    background: rgba(34, 34, 64, 0) !important;
+  }
+  
+  .login-form input[type="text"],
+  .login-form input[type="password"],
+  input[type="email"],
+  input[type="text"],
+  input[type="password"] {
+    width: 90%;
+    padding: 10px 14px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 12px;
+    background: #232a4d3d;
+    color: #f8f8ff;
+    font-size: 1rem;
+    font-family: 'Lexend', Arial, sans-serif;
+    box-shadow: 0 2px 8px 0 rgba(30, 45, 59, 0.08);
+    transition: background 0.2s, color 0.2s;
+  }
+  
+  .login-form input[type="text"]:focus,
+  .login-form input[type="password"]:focus,
+  input[type="email"]:focus,
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    background: #2e4a6f;
+    outline: 2px solid #7ef9e4;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: left;
+   margin-left: -46px;
+  }

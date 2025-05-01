@@ -1,0 +1,47 @@
+  /* waves at the bottom near the footer - sadly its an import from outside - local machine needs internet access to display it */
+  .wave-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 2;
+    pointer-events: none;
+  }
+  /* The lagrout of the aurora background */
+  .aurora-bg {
+    position: relative;
+    min-height: 100vh;
+    min-width: 100vw;
+    overflow: hidden;
+    z-index: 0;
+    background:
+      linear-gradient(120deg, rgba(177, 42, 231, 0.219),rgba(180, 247, 103, 0.171) 60%,  rgba(68, 250, 220, 0.192) 100%),
+      url("C:/Users/aquil/Downloads/pexels-visit-greenland-108649-360912.jpg") center center / cover no-repeat;
+  }
+
+  /* Animating the aurora overlay so it glows */
+.aurora-bg::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.65;
+    background:
+      radial-gradient(ellipse at 60% 20%, #7ef9e4cc 0%, transparent 45%),
+      radial-gradient(ellipse at 30% 80%, #b388ffbb 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 60%, #1b8a6bcc 0%, transparent 60%),
+      radial-gradient(ellipse at 40% 40%, #2e4a6fcc 0%, transparent 70%),
+      radial-gradient(ellipse at 70% 70%, #3a3f6bcc 0%, transparent 70%),
+      radial-gradient(ellipse at 50% 30%, #ff7eb988 0%, transparent 60%);
+    animation: auroraMove 8s ease-in-out infinite alternate;
+  }
+  
+  @keyframes auroraMove {
+    0% { filter: blur(20px) brightness(0.8) hue-rotate(18deg); }
+    25% { filter: blur(10px) brightness(0.9) hue-rotate(28deg); }
+    50% { filter: blur(40px) brightness(0.7) hue-rotate(38deg); }
+    75% { filter: blur(10px) brightness(0.8) hue-rotate(38deg); }
+    100% { filter: blur(20px) brightness(0.9) hue-rotate(18deg); }
+  }
+

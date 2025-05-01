@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Lexend', Arial, sans-serif; /* Lexend is dyslexia friendly */
+  font-size: 18px; /*This size is good for dyslexia readability*/
+  background: linear-gradient(
+    120deg,
+    #181c2f 0%,
+    #1a1333 20%,
+    #1e2d3b 40%,
+    #164a5b 60%,
+    #1b3a4b 80%,
+    #2e1a47 100%
+  );
+  color: #f8f8ff;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased; /* Helps dyslexia font readability */ 
+  -moz-osx-font-smoothing: grayscale; 
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Accessibility: focus outlines */
+a, button, input, select, textarea {
+  outline-color: #000000;
+  outline-width: 3px;
+  outline-style: auto;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

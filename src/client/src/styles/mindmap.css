@@ -1,0 +1,65 @@
+.mindmap-svg {
+    border: 1px solid black;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.021);
+    margin: 32px auto;
+    display: block;
+}
+
+.mindmap-scroll {
+    width: 100vw;       
+    height: 80vh;         
+    overflow: auto;      
+    background: white;   
+    border-radius: 20px; 
+    box-shadow: 0 2px 12px rgba(0,0,0,0.021);
+    margin: 32px auto;
+    display: block;
+}
+
+.mindmap .side-panel {
+    background: white !important;
+    border-radius: "20px" !important;
+    box-shadow: 0 4px 16px 0 rgba(30, 45, 59, 0.10) !important;
+    margin: "10px" !important;
+    padding: "10px" !important;
+    font-family: 'Lexend', Arial, sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.2rem !important;
+    color: "#222240" !important;
+    text-align: center !important;
+}
+
+.label-box {
+    border: 1px solid black;
+    background: #710ccf;
+    padding: 10px;
+    font-size: 17px;
+    white-space: nowrap;
+    overflow: visible;
+    display: inline-block;
+    box-sizing: border-box;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .toggle-button {
+    width: 30px;
+    height: 30px;
+    background: #000 !important; 
+    color: #f7f7f7 !important;     
+    border-radius: 50% !important; 
+    border: 1px solid black !important;
+    font-size: 14px !important;    
+    font-weight: bold !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+    user-select: none !important;
+}

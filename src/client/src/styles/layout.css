@@ -1,0 +1,164 @@
+  .backdrop {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: rows;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+    padding-bottom: 120px;
+    gap: 70px;
+  }
+  
+  /*Full disclosure i probably overdid this and theres repeats as i just threw everything at it to get the logo and logo text to work - it works so ....yeah */
+  .main-logo {
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 auto;
+    display: block;
+  }
+
+.main-logo,
+.main-logo a,
+.main-logo a:active,
+.main-logo a:hover,
+.main-logo img,
+.main-logo p {
+  width: 250%;
+  max-width: 500px;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  outline: none !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #f8f8ff !important;
+  text-shadow: 1px 1px 2px rgba(0.5, 0.5, 0.5, 0.5) !important;
+}
+
+  .main-logo img:hover {
+    transform: scale(1.02) !important;
+    transition: transform 0.3s ease-in-out ;
+  }
+
+  .main-logo p {
+    font-size: 4.0rem !important;
+    color: #f8f8ff !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    margin: 0 0 0 0 !important;
+    font-family: 'Lexend', Arial, sans-serif !important;
+    font-weight: 600 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    display: block;
+  }
+
+  
+  .logo, .logo a {
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    outline: none !important;
+    padding: 0 !important;
+  }
+
+  .logo {
+    border: none;
+    box-shadow: none;
+    background: none;
+    margin-top: 40px;
+    margin-bottom: 24px;
+    font-size: 2.2rem;
+    font-family: 'Lexend', Arial, sans-serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  
+  .main-menu {
+    background: #222240d9;
+    border-radius: 24px;
+    padding: 32px 48px;
+    box-shadow: 0 8px 32px 0 rgba(30, 45, 59, 0.25);
+    margin-bottom: 32px;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .main-menu-header {
+    background: rgba(30, 45, 59, 0.95);
+    border-radius: 16px 16px 0 0;
+    padding: 24px 40px 16px 40px;
+    margin: -32px -48px 24px -48px; 
+    height: 10p;
+    box-shadow: 0 4px 16px 0 rgba(30, 45, 59, 0.10);
+  }
+  
+  .main-menu-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+    font-family: 'Lexend', Arial, sans-serif;
+    font-weight: 700;
+    padding-left: 40px;
+    letter-spacing: 1px;
+  }
+  
+  .nav p, .nav a {
+    font-size: 1.2rem;
+    margin: 12px 0;
+    color: #f8f8ff;
+    text-decoration: none;
+  }
+  
+  .nav a {
+    color: #ffffff;
+    transition: color 0.2s;
+  }
+  
+  .nav a:hover {
+    color: #e0cfff;
+    text-decoration: underline;
+  }
+  
+  .user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .user-item {
+    background: rgba(126, 249, 228, 0.08);
+    color: #f8f8ff;
+    margin: 8px 0;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+  }
+  
+  header, footer {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  
+  .footer {
+    width: 100vw;
+    background: rgba(1, 3, 24, 0.884);
+    color: #ffffff;
+    text-align: center;
+    padding: 32px 0 24px 0;
+    font-size: 1.1rem;
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    z-index: 4;
+  }
