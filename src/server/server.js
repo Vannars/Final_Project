@@ -64,7 +64,7 @@ app.use('/api/users', usersRoutes(connection)); // pointing to the routes from u
 
 // Post route sents plaintext from the body to be processed by mindmapProcess.js - this calls components.py - retuning a json response to the react frontend
 app.post("/api/mindmap", async (req, res) => {
-    const plainText = req.body;
+    const plainText = req.body; // get the plaintext from the body of the request (see also fetch in App.js)
     try {
       const result = await executeMindmapProcess(plainText);
       res.json(result);

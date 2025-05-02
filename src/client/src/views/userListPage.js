@@ -22,6 +22,7 @@ const UserListPage = ({ siteData, user, setUser }) => {
     fetchUsers(); // Call the fetch function
   }, []); // empty dependency = run when mounted
 
+  //RENDER USER LIST PAGE
   return (
     <div>
       {/* Header Section */}
@@ -60,7 +61,7 @@ const UserListPage = ({ siteData, user, setUser }) => {
 
       {/* Footer Section */}
       <footer>
-        <p>MapRecallis</p>
+        <p>MindRecallis</p>
         <p>Created by: Noah Tambala (ntamb002)</p>
         <p>Contact: ntamb002@gold.ac.uk</p>
       </footer>
