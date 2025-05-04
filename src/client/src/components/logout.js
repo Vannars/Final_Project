@@ -1,3 +1,4 @@
+// logout.js
 import React from "react";
 
 const LogoutButton = ({ setUser }) => {

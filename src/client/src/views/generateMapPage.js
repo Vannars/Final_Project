@@ -1,10 +1,19 @@
+// generatemapPage.js
+
+//*-------- Note to self, in this page I  handle the fetch of data and display the generated map
+// HOWEVER usemindmap_DisplayExecuteMain.js is where the html framework is created and the logic for saving and downloading the map exists
+// bit of a brain ache to remember but there we go
+
 import React, { useState, useEffect } from "react";
 import DisplayMindmap from "../components/useMindmap_DisplayExecuteMain";
 import { useLocation } from "react-router-dom"; // i used thiis to get the context from the previous page (gettingStartedPage.js)
+import useSessionUser from "../hooks/useSessionUser";
+
 
 const GenerateMapPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user] = useSessionUser();
 
   // Defined the context outside useEffect so it's available in the dependency array
   const defaultContext =
@@ -41,7 +50,7 @@ const GenerateMapPage = () => {
       });
   }, [context, title]);
 
-  return <DisplayMindmap data={data} loading={loading} />;
+  return <div><DisplayMindmap data={data} loading={loading} user={user}/></div>;
 };
 
 export default GenerateMapPage;

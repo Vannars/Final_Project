@@ -22,7 +22,7 @@ const GettingStarted = ({ user, setUser }) => {
   };
 
   // FILE UPLOAD FUNCTION - uploadFiles.js)
-  const characterLimit = 1000;
+  const characterLimit = 10000;
   const uploadFile = (e) => {
     handleFileUpload(
       e.target.files[0],
@@ -37,7 +37,7 @@ const GettingStarted = ({ user, setUser }) => {
     setFileContent("");
   };
 
-  // RENDER GETTING STARTED PAGE with WelcomePage structure, NO links to other pages
+  // RENDER GETTING STARTED PAGE with WelcomePage structure
   return (
     <div className="aurora-bg">
       <div className="backdrop">
@@ -124,8 +124,10 @@ const GettingStarted = ({ user, setUser }) => {
           )}
         </div>
         <footer className="footer">
-          <p>Created by: Noah Tambala (ntamb002)</p>
-        </footer>
+        <p>MindRecallis</p>
+        <p>Created by: Noah Tambala (ntamb002)</p>
+        <p>Contact: ntamb002@gold.ac.uk</p>
+      </footer>
       </div>
       <Waves />
     </div>

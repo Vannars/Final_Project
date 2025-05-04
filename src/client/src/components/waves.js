@@ -1,3 +1,4 @@
+// waves.js
 import React from "react";
 
 // Auroras + Waves SVGs 

@@ -9,23 +9,24 @@ module.exports = (db) => {
   router.post(
     "/login",
     [
-      check("username").isAlphanumeric().trim().escape(), // Validate username
-      check("password").isLength({ min: 8 }).trim().escape(), // Validate password length
+      check("username").isAlphanumeric().trim().escape(),
+      check("password").isLength({ min: 8 }).trim().escape(),
     ],
     (req, res, next) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() }); // Return validation errors
+        return res.status(400).json({ errors: errors.array() });
       }
 
-      const sqlquery = "SELECT PasswordHash FROM users WHERE username = ?";
-      const sanitizedUsername = req.body.username; // Sanitize username input
+      const sqlquery =
+        "SELECT UserID, PasswordHash FROM users WHERE username = ?";
+      const sanitizedUsername = req.body.username;
 
       db.query(sqlquery, [sanitizedUsername], (err, result) => {
         if (err) return next(err);
 
         if (result.length === 0) {
-          return res.status(404).json({ message: "User not found" }); // User does not exist
+          return res.status(404).json({ message: "User not found" });
         }
 
         bcrypt.compare(
@@ -35,11 +36,11 @@ module.exports = (db) => {
             if (err) return res.status(500).json({ message: "Login failed" });
 
             if (isMatch) {
-              req.session.userId = sanitizedUsername; // Set session userId
-              req.session.username = sanitizedUsername; // Set session username
+              req.session.userID = result[0].UserID; // Set session userID from DB
+              req.session.username = sanitizedUsername;
               return res.status(200).json({ message: "Login successful" });
             } else {
-              return res.status(401).json({ message: "Invalid credentials" }); // Incorrect password
+              return res.status(401).json({ message: "Invalid credentials" });
             }
           }
         );
@@ -60,7 +61,11 @@ module.exports = (db) => {
   // Route to check session user (logged in status)
   router.get("/session", (req, res) => {
     if (req.session && req.session.username) {
-      res.json({ loggedIn: true, username: req.session.username });
+      res.json({
+        loggedIn: true,
+        username: req.session.username,
+        userID: req.session.userID, // - now including userID to because schema needs user id when saving a mindmap
+      });
     } else {
       res.json({ loggedIn: false });
     }

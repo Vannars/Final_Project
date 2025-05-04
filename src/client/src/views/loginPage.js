@@ -86,6 +86,7 @@ const LoginPage = ({ siteData, setUser, user }) => {
           )}
         </div>
         <footer className="footer">
+          <p>Map-Recallis</p>
           <p>Created by: Noah Tambala (ntamb002)</p>
           <p>Contact: ntamb002@gold.ac.uk</p>
         </footer>

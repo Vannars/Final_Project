@@ -1,3 +1,4 @@
+//useSessionUser.js
 import { useState, useEffect, useCallback} from "react";
 // Tracking the session state (is a user logged in)
 export default function useSessionUser() {
@@ -8,7 +9,7 @@ export default function useSessionUser() {
   })
     .then(res => res.json()) // respond with json (which should contain the session data)
     .then(data => {
-      if (data.loggedIn) setUser({ username: data.username }); // logged in becomes the username in the recived session data
+      if (data.loggedIn) setUser({ username: data.username, UserID: data.userID}); // logged in becomes the username in the recived session data
       else setUser(null); // if not logged in user is null (not logged in)
     });
   }, []); // empty dependency array = run once when mounted

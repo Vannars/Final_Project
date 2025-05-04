@@ -14,34 +14,54 @@ const WelcomePage = ({ user, setUser }) => {
         <div className="main-menu">
           <div className="main-menu-header">
             <h1>Welcome to Map-Recallis</h1>
+            <b>Enjoy the lights or click the links below to start learning!</b>
           </div>
           <nav className="nav">
             {user ? (
-              <p>
-                Logged in as: {user.username} | <LogoutButton setUser={setUser} />
-              </p>
+              <>
+                <p>
+                  Logged in as: {user.username} | <LogoutButton setUser={setUser} />
+                </p>
+                <p>
+                  <Link to="/about" className="theme-btn">About</Link>
+                </p>
+                <p>
+                  <Link to="/gettingStarted" className="theme-btn">Getting Started</Link>
+                </p>
+              </>
             ) : (
               <>
+               <p>
+                  <Link to="/about" className="theme-btn">About</Link>
+               </p>
                 <p>
                   <Link to="/login" className="theme-btn">Login</Link>
                 </p>
                 <p>
                   <Link to="/register" className="theme-btn">Register</Link>
                 </p>
+                <p>
+                  <Link to="/gettingStarted" className="theme-btn">Get Started</Link>
+                </p>
               </>
-            )}
+            )}   
             <p>
-              <Link to="/gettingStarted" className="theme-btn">Guest User</Link>
+              <Link to="/demo" className="theme-btn">Demo (Prompt Presets)</Link>
             </p>
             <p>
-              <Link to="/users" className="theme-btn">User List</Link>
+              <Link to="/mindmaps" className="theme-btn">My Maps (logged in only)</Link>
             </p>
-          </nav>
+        </nav>
         </div>
-        <footer className="footer">Footer </footer>
+        <footer className="footer">
+        <p>Map-Recallis</p>
+        <p>Created by: Noah Tambala (ntamb002)</p>
+        <p>Contact: ntamb002@gold.ac.uk</p>
+      </footer>
       </div>
       <WaveSVG />
     </div>
+    
   );
 };
 export default WelcomePage;

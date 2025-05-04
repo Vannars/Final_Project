@@ -1,10 +1,4 @@
-// This file contains the principal logic for rendering:
-// 1. The tree structure of the mindmap using D3.js
-// 2. Functionality for collapsing, updating and expanding nodes.
-// 3. Dynamically scaling the SVG elements based on node positions
-// 4. Interactivity for displaying the side panel to form a question-answer pair between the map and the panel (flashcarding).
-// The functions collapseNodes and updateExpandCollapse are exported for usage in runMap.js and mainMap.js.
-// ----------------------------------------------------------------------------------------------------------------------------------------
+//useMindmap_TreeStructure.js
 
 import * as d3 from "d3";
 
@@ -26,14 +20,59 @@ export const updateExpandCollapse = (
   source,
   toggleNode
 ) => {
-  // Expose root and update function globally for editing
-  window.__mindmap_root__ = root;
-  window.__mindmap_updateExpandCollapse__ = () =>
+  // Expose root and update function globally for editing the fields in the side penel 
+  window.mindmapRoot = root;
+  window.mindmap_updateExpandCollapse = () =>
     updateExpandCollapse(root, tree, svg, g, source, toggleNode);
 
-  // SVG SIZING AND CENTERING (nodes)
-  tree.nodeSize([60, 300])(root);
+  // LABEL WIDTH MEASUREMENT (dynamic) 
+  // Create a hidden div for measuring label widths
+  let measureDiv = document.getElementById("label-measure-div");
+  if (!measureDiv) {
+    measureDiv = document.createElement("div");
+    measureDiv.id = "label-measure-div";
+    measureDiv.style.position = "absolute";
+    measureDiv.style.visibility = "hidden";
+    measureDiv.style.height = "auto";
+    measureDiv.style.width = "auto";
+    measureDiv.style.whiteSpace = "nowrap";
+    document.body.appendChild(measureDiv);
+  }
+
+  // Measure and store label width for each node
   const nodes = root.descendants();
+  nodes.forEach((d) => {
+    measureDiv.innerText = d.data.Question;
+    d.labelWidth = Math.max(measureDiv.getBoundingClientRect().width + 42, 160); //  pad/min
+  });
+
+  // Spacing node labels from width
+  // Find max label width at each depth
+  const levels = {};
+  nodes.forEach((d) => {
+    const depth = d.depth;
+    if (!levels[depth]) levels[depth] = 0;
+    levels[depth] = Math.max(levels[depth], d.labelWidth);
+  });
+
+  // Calculate total horizontal spacing at each depth
+  const horizontalSpacing = [];
+  let cWidth = 0;
+  Object.keys(levels)
+    .sort((a, b) => a - b)
+    .forEach((depth) => {
+      cWidth += levels[depth] + 40;
+      horizontalSpacing[depth] = cWidth;
+    });
+
+  // Set each node y based on its depth
+  nodes.forEach((d) => {
+    if (d.parent) {
+      d.y = d.parent.y + (d.parent.labelWidth || 160) + 60; // 60px gap between nodes
+    } 
+  });
+
+  // Calculate SVG size based on node positions
   const xExtent = d3.extent(nodes, (d) => d.x);
   const yExtent = d3.extent(nodes, (d) => d.y);
   const svgWidth = yExtent[1] - yExtent[0] + window.innerWidth;
@@ -68,7 +107,7 @@ export const updateExpandCollapse = (
     .attr("class", "label-fo")
     .attr("x", 0)
     .attr("y", -20)
-    .attr("width", 1000)
+    .attr("width", (d) => d.labelWidth)
     .attr("height", 40)
     .append("xhtml:div")
     .attr("class", "label-box")
@@ -89,9 +128,7 @@ export const updateExpandCollapse = (
               <br/>
               <input id="edit-text" type="text" style="width:90%;margin-bottom:10px;" placeholder="Enter new value..." />
             </div>
-           
           `;
-          // Stores the current QAID globally for editing
           window.currentQaid = d.data.QAID;
         }
         sidePanel.style.display = "block";
@@ -101,27 +138,27 @@ export const updateExpandCollapse = (
   // NODE ANIMATION AND TOGGLE BUTTONS
   requestAnimationFrame(() => {
     g.selectAll(".node").each(function (d) {
-      const foreignObject = this.querySelector(".label-box");
-      if (!foreignObject) return;
-      const labelWidth = foreignObject.getBoundingClientRect().width;
+      const labelBox = this.querySelector(".label-box");
+      if (!labelBox) return;
+      // Use measured label width
+      const labelWidth = d.labelWidth || 160;
       d.visualOffsetY = labelWidth + 10 + 15;
       d3.select(this)
         .select("foreignObject.label-fo")
         .attr("width", labelWidth);
+
       const group = d3.select(this);
 
-      //TOGGLE BUTTON LOGIC
+      // TOGGLE BUTTON LOGIC
       const toggles = group.selectAll(".toggle-fo")
         .data((d.children || d._children) ? [d] : [], d => d.data.QAID);
 
-      // Remove old data (old expanded/collapsed button symbol)
       toggles.exit().remove();
 
-      // Insert the new data (expanded.collapses button symbol)
       const toggleEnter = toggles.enter()
         .append("foreignObject")
         .attr("class", "toggle-fo")
-        .attr("x", labelWidth + 10)
+        .attr("x", labelWidth -20)
         .attr("y", -15)
         .attr("width", 30)
         .attr("height", 30);
@@ -134,7 +171,6 @@ export const updateExpandCollapse = (
           toggleNode(d);
         });
 
-      // Update the symbols
       group.selectAll(".toggle-button")
         .html((d) => (d.children ? "−" : "+"));
     });
@@ -150,10 +186,11 @@ export const updateExpandCollapse = (
       .transition()
       .duration(300)
       .attr("d", (d) => {
+        // Use label width for correct link positioning
         const sourceX = d.source.x;
         const targetX = d.target.x;
-        const sourceLabelOffset = d.source.visualOffsetY || 100;
-        const sourceY = d.source.y + sourceLabelOffset + 15;
+        const sourceLabelOffset = d.source.labelWidth || 160;
+        const sourceY = d.source.y + sourceLabelOffset -30;
         const targetY = d.target.y - 10;
         return `M${sourceY},${sourceX}
                 L${sourceY + 50},${sourceX}
@@ -175,19 +212,10 @@ export const updateExpandCollapse = (
     .attr("transform", (d) => `translate(${d.y},${d.x})`);
 
   node.exit().remove();
-// NODE TRANSITION
-node
-  .merge(nodeUpdate)
-  .transition()
-  .duration(300)
-  .attr("transform", (d) => `translate(${d.y},${d.x})`);
 
-node.exit().remove();
-
-// Update label for nodes
-g.selectAll(".node").select(".label-box")
-  .html((d) => d.data.Question);
-
+  // Update label for nodes
+  g.selectAll(".node").select(".label-box")
+    .html((d) => d.data.Question);
 
   // SAVE NODE POSITIONS
   nodes.forEach((d) => {
@@ -195,7 +223,6 @@ g.selectAll(".node").select(".label-box")
     d.y0 = d.y;
   });
 };
-
 
 function updateNodeFieldByQAID(node, qaid, field, value) {
   if (node.data.QAID === qaid) {
@@ -215,6 +242,7 @@ function updateNodeFieldByQAID(node, qaid, field, value) {
   return false;
 }
 
+// Event listener - for changing question and answer text
 if (!window.mindmapEditListener) {
   window.mindmapEditListener = true;
   document.addEventListener("click", function (event) {
@@ -224,7 +252,7 @@ if (!window.mindmapEditListener) {
       const value = document.getElementById("edit-text").value;
       
       //Updating the node question text
-      if (value && window.mindmapRoot) { // if theres text in the field and the map has a root (aka it exists)
+      if (value && window.mindmapRoot) {
         updateNodeFieldByQAID(window.mindmapRoot, qaid, field, value);
         if (window.mindmap_updateExpandCollapse) {
           window.mindmap_updateExpandCollapse();
@@ -234,7 +262,7 @@ if (!window.mindmapEditListener) {
         if (field === "Answer") {
           document.getElementById("side-panel-content").querySelector("div").innerText = value;
         }
-         document.getElementById("edit-text").value = "";
+        document.getElementById("edit-text").value = "";
       }
     }
   });

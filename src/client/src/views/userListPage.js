@@ -25,7 +25,6 @@ const UserListPage = ({ siteData, user, setUser }) => {
   //RENDER USER LIST PAGE
   return (
     <div>
-      {/* Header Section */}
       <header>
         <div className="logo">
           <a href="/">{siteData.siteName}</a>
@@ -45,8 +44,6 @@ const UserListPage = ({ siteData, user, setUser }) => {
           )}
         </nav>
       </header>
-
-      {/* Main Section */}
       <main>
         <h1>{siteData.siteName} site</h1>
         <h2>Here are the list of users</h2>
@@ -58,10 +55,8 @@ const UserListPage = ({ siteData, user, setUser }) => {
           ))}
         </ul>
       </main>
-
-      {/* Footer Section */}
-      <footer>
-        <p>MindRecallis</p>
+      <footer className="footer">
+        <p>Map-Recallis</p>
         <p>Created by: Noah Tambala (ntamb002)</p>
         <p>Contact: ntamb002@gold.ac.uk</p>
       </footer>

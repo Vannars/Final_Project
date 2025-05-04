@@ -119,7 +119,6 @@ const RegisterPage = ({ siteData, user, setUser }) => {
             <button type="submit">Register</button>
           </form>
           {message && <p>{message}</p>}
-          {/* No nav/links to other pages here */}
           {user && (
             <p>
               Logged in as: {user.username} | <LogoutButton setUser={setUser} />
@@ -127,6 +126,7 @@ const RegisterPage = ({ siteData, user, setUser }) => {
           )}
         </div>
         <footer className="footer">
+          <p>Map-Recallis</p>
           <p>Created by: Noah Tambala (ntamb002)</p>
           <p>Contact: ntamb002@gold.ac.uk</p>
         </footer>

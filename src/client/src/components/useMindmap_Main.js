@@ -1,4 +1,4 @@
-// runMap.js
+// useMindmap_Main.js
 import { useEffect } from "react";
 import * as d3 from "d3";
 import { collapseNodes, updateExpandCollapse } from "./useMindmap_TreeStructure";
@@ -39,6 +39,10 @@ const useMindMap = (svgRef, data) => {
       .attr("class", "mindmap-svg")
     svg.selectAll("*").remove(); // Clear previous renders
     const g = svg.append("g"); // Create group container for the tree
+
+    svg.call(d3.zoom().scaleExtent([0.5, 2]).on("zoom", (event) => {
+      g.attr("transform", event.transform); // Applies zooming transforms to the group element (in effect this allows zooming in and out of the svg/map)
+    }));
 
     //===============================================================TOGGLE NODE FUNCTION===============================================================
     // This function expands or collapses a node when it is clicked.
