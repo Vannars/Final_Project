@@ -38,10 +38,10 @@
   }
   
   @keyframes auroraMove {
-    0% { filter: blur(20px) brightness(0.8) hue-rotate(18deg); }
-    25% { filter: blur(10px) brightness(0.9) hue-rotate(28deg); }
-    50% { filter: blur(40px) brightness(0.7) hue-rotate(38deg); }
-    75% { filter: blur(10px) brightness(0.8) hue-rotate(38deg); }
+    0% { filter: blur(20px) brightness(0.9) hue-rotate(18deg); }
+    25% { filter: blur(10px) brightness(1.0) hue-rotate(28deg); }
+    50% { filter: blur(40px) brightness(0.8) hue-rotate(38deg); }
+    75% { filter: blur(10px) brightness(1.0) hue-rotate(38deg); }
     100% { filter: blur(20px) brightness(0.9) hue-rotate(18deg); }
   }
 

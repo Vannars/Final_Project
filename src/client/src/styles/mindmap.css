@@ -5,6 +5,11 @@
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.021);
     margin: 32px auto;
     display: block;
+    cursor: grab;
+}
+
+.mindmap-svg:active {
+    cursor: grabbing;
 }
 
 .mindmap-scroll {
