@@ -8,6 +8,7 @@ from collections import defaultdict
 
 # Import local module - context_conditions.py - splitting text and boundaries etc
 from context_conditions import format_context
+from context_conditions import split_by_commas, split_by_semicolon
 
 # Loading spaCy and transformer model (Cited - didnt train myself just adopting it)
 nlp = spacy.load("en_core_web_sm")
@@ -21,8 +22,9 @@ def regenerate_question_from_answer_only(answer, max_length=64): # keeping for i
     input_ids = tokenizer.encode(input_text, return_tensors="pt")
     output = model.generate(input_ids=input_ids, max_length=max_length)
     return tokenizer.decode(output[0], skip_special_tokens=True)
+
 # In use functions:
-def get_question(answer, context, max_length=250): # I mean if sentence is longer than 250 it should probably be spliced up regardlesss
+def get_question(answer, context, max_length=4000): # I mean if sentence is longer than 250 it should probably be spliced up regardlesss
     input_text = f"answer: {answer}  context: {context}"
     features = tokenizer([input_text], return_tensors='pt')
     output = model.generate(input_ids=features['input_ids'], attention_mask=features['attention_mask'], max_length=max_length)
@@ -35,43 +37,54 @@ def get_sentences(text):
     sentences = [s.text.strip() for s in doc.sents]
     return sentences
 
-def gen_questions_hierarchial(text): # also a bit text hungry
-    sentences = get_sentences(text) # uses get_sentences
-    analysed_s = set() #looked at sentencews go here
-    children = [] #for children
-    seen_questions = defaultdict(int) # default dict for counting occurances
 
-    for s in sentences: # loop through sentences
-        cleaned_s = s.strip() # technically three times im getting rid of whitespace but this tripples down on that check
-        if len(cleaned_s) < 1 or cleaned_s in analysed_s: # if it makes no sense or is only like one character ill skip it 
-            continue
-        analysed_s.add(cleaned_s) # analysed becomes cleansed
-        
-        # Because notation is ugh - get_sentence returns array of sentence - s in sentences loops that array
-        # q_cleaned - cleans the questions (go figure) 
-        # answer - formats the thing (see context_conditions.py)
-        q_cleaned = get_question(cleaned_s, text).replace("<pad> question: ", "").replace("</s>", "").strip() # weird ugly padding? - had to remove it 
-        answer = format_context(cleaned_s)
-        
-        seen_questions[q_cleaned] += 1 # is this magic? no but dict counts in integers - so this value - this question - has an int value in the dict that gets incremeted . groovy
-        if seen_questions[q_cleaned] > 1 and q_cleaned.startswith("What"):
-            q_cleaned = f"{seen_questions[q_cleaned]}) {q_cleaned[0].lower() + q_cleaned[1:]}" # im not really happy with what else clauses - so i numbered them for repeated questions 
-
-        children.append({
-            "Question": q_cleaned,
-            "Answer": answer,
+# Build a tree for a sentence, splitting by commas for subchildren
+def build_sentence_tree(sentence, context):
+    parts = (split_by_commas(sentence) + split_by_semicolon(sentence))
+    if not parts:
+        return None
+    parent = {
+        "Question": get_question(parts[0], context).replace("<pad> question: ", "").replace("</s>", "").strip(),
+        "Answer": format_context(parts[0]),
+        "QAID": str(uuid.uuid4()),
+        "children": []
+    }
+    # Adds comma split children if any
+    for child_part in parts[1:]:
+        child_node = {
+            "Question": get_question(child_part, context).replace("<pad> question: ", "").replace("</s>", "").strip(),
+            "Answer": format_context(child_part),
             "QAID": str(uuid.uuid4()),
             "children": []
-        })
+        }
+        parent["children"].append(child_node)
+    return parent
 
-    return children
+#  Paragraph hierarchy logic with comma-split subchildren
+def gen_questions_paragraph_hierarchy(text):
+    paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
+    nodes = []
+
+    for para in paragraphs:
+        sentences = get_sentences(para)
+        if not sentences:
+            continue
+        # First sentence is the top-level node (with comma split)
+        first_sentence_tree = build_sentence_tree(sentences[0], para)
+        # Children are the rest of the sentences, each split by commas for their own subchildren
+        for sent in sentences[1:]:
+            child_tree = build_sentence_tree(sent, para)
+            if child_tree:
+                first_sentence_tree["children"].append(child_tree)
+        nodes.append(first_sentence_tree)
+    return nodes
 
 def output_main(context_arg=None): #check input text in main for the sister condition 
     default_context = (
         "The answer to life the universe and everything is 42. This quote comes from the Hitchhikers guide to the galaxy by Douglas Adams."
     )
     context_to_use = context_arg if context_arg else default_context
-    children = gen_questions_hierarchial(context_to_use)
+    children = gen_questions_paragraph_hierarchy(context_to_use)
 
     result = {
         "Question": "Root",
@@ -82,12 +95,14 @@ def output_main(context_arg=None): #check input text in main for the sister cond
     mindmap_data = {
         "Question": result["Question"],
         "QAID": result["QAID"],
-        "children": [{
-            "Question": item["Question"],
-            "Answer": item["Answer"],
-            "QAID": item["QAID"],
-            "children": item["children"]
-        } for item in result["children"]]
+        "children": [ # keep this structure for compatibility
+            {
+                "Question": item["Question"],
+                "Answer": item["Answer"],
+                "QAID": item["QAID"],
+                "children": item["children"]
+            } for item in result["children"]
+        ]
     }
 
     return json.dumps(mindmap_data, indent=2)

@@ -20,10 +20,12 @@ def custom_boundaries(doc):
          # These two conditionals ensure sentence boundaries occur at periods (default) and oxford commas (", and").
          if token.text == "," and token.nbor(1).text == "and":  # oxford comma boundary (apprently we do we give a flip about an oxford comma)
             doc[token.i + 1].is_sent_start = True
-         if token.text == ".":  
-            doc[token.i + 1].is_sent_start = True
          if token.text.endswith(".") and not doc[token.i + 1].is_space:
             doc[token.i + 1].is_sent_start = True
+         if token.text.endswith("!") and not doc[token.i + 1].is_space:
+            doc[token.i + 1].is_sent_start = True
+        
+
     return doc
 
 # adding to the pipeline is necessary - otherwise no custom bonundaries :(
@@ -48,3 +50,10 @@ def extract_fact(block): # made thise - havent used  it - its intended to extrac
     if nouns:
         return block
     return block
+
+# Tree for sentence helpers - spliting by commas and semicolons for subchildren
+def split_by_commas(sentence):
+    return [part.strip() for part in sentence.split(", ") if part.strip()]
+
+def split_by_semicolon(sentence):
+    return [part.strip() for part in sentence.split(";") if part.strip()]
