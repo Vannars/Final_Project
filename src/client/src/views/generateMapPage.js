@@ -42,11 +42,11 @@ const GenerateMapPage = () => {
           data.Question = title;
         }
         setData(data);
-        setLoading(false);
+        setLoading(false); // sadly spinner not working :( 
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setLoading(false);
+        setLoading(false); 
       });
   }, [context, title]);
 
