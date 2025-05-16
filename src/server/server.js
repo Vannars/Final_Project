@@ -13,7 +13,7 @@ const { executeMindmapProcess } = require('./mindmapProcess');
 
 //Middleware
 app.use(cors({
-  origin: 'http://localhost:3002', // front end orgin
+  origin: ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:3001'], // front end orgin
   credentials: true, // credentials to be sent with requests 
 })); // cross origin requests - because i made the back and front end run on different ports it just wrorks
 

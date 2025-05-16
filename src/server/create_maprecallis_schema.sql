@@ -1,6 +1,10 @@
 CREATE DATABASE IF NOT EXISTS maprecallis;
 USE maprecallis;
 
+CREATE USER IF NOT EXISTS 'maprecallis_app'@'localhost' IDENTIFIED BY 'cjnotes32!';
+GRANT ALL PRIVILEGES ON maprecallis.* TO 'maprecallis_app'@'localhost';
+FLUSH PRIVILEGES;
+
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
   UserID INT AUTO_INCREMENT PRIMARY KEY,
